@@ -1,10 +1,12 @@
 import torch
 from transformers import GPT2Tokenizer, GPT2LMHeadModel, Trainer, TrainingArguments, TextDataset, DataCollatorForLanguageModeling
 
+# Load pre-trained model and tokenizer
 model_name = 'gpt2'
 tokenizer = GPT2Tokenizer.from_pretrained(model_name)
 model = GPT2LMHeadModel.from_pretrained(model_name)
 
+# Prepare dataset
 def load_dataset(file_path, tokenizer, block_size=128):
     dataset = TextDataset(
         tokenizer=tokenizer,
@@ -14,9 +16,9 @@ def load_dataset(file_path, tokenizer, block_size=128):
     return dataset
 
 train_dataset = load_dataset('healthy_eating.txt', tokenizer)
-eval_dataset = load_dataset('healthy_eating.txt', tokenizer)  # For simplicity, using the same file for evaluation
 data_collator = DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm=False)
 
+# Training arguments
 training_args = TrainingArguments(
     output_dir='./results',
     overwrite_output_dir=True,
@@ -26,12 +28,17 @@ training_args = TrainingArguments(
     save_total_limit=2,
 )
 
+# Trainer
 trainer = Trainer(
     model=model,
     args=training_args,
     data_collator=data_collator,
     train_dataset=train_dataset,
-    eval_dataset=eval_dataset,
 )
 
+# Fine-tune the model
 trainer.train()
+
+# Save the model and tokenizer
+trainer.save_model("./results")
+tokenizer.save_pretrained("./results")
