@@ -1,1 +1,3 @@
 venv/
+result/
+cached_lm_GPT2Tokenizer_128_healthy_eating.txt
