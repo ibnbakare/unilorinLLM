@@ -15,7 +15,7 @@ def load_dataset(file_path, tokenizer, block_size=128):
     )
     return dataset
 
-train_dataset = load_dataset('healthy_eating.txt', tokenizer)
+train_dataset = load_dataset('dataset.txt', tokenizer)
 data_collator = DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm=False)
 
 # Training arguments
